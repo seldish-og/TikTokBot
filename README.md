@@ -1,2 +1,2 @@
 # TikTokBot
-Bot save videos from instagram and then post them to Tik-Tok 
+Bot saves videos from instagram and then posts them to Tik-Tok 
