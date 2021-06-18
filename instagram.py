@@ -45,23 +45,28 @@ class Parser:
 
     def login(self):
         try:
-            self.browser.get('https://www.instagram.com/accounts/login/?next=%2F&source=mobile_nav')  # open website
+            # open website
+            self.browser.get('https://www.instagram.com/accounts/login/?next=%2F&source=mobile_nav')  
             time.sleep(random.randrange(2, 4))
-            user_input = self.browser.find_element_by_name('username')  # find the field username
-            user_input.clear()  # clear the field (just in case)
-            user_input.send_keys(username)  # write the username
+            # find the field username
+            user_input = self.browser.find_element_by_name('username') 
+            # clear the field (just in case)
+            user_input.clear()
+            # write the username
+            user_input.send_keys(username)  
 
             time.sleep(random.randrange(2, 4))
-
-            password_input = self.browser.find_element_by_name('password')  # find the field username
+            # find the field username
+            password_input = self.browser.find_element_by_name('password')  
             password_input.clear()
-            password_input.send_keys(password)  # write the password
-
-            password_input.send_keys(Keys.ENTER)  # send the complete authorization form
+            # write the password
+            password_input.send_keys(password)  
+            # send the complete authorization form
+            password_input.send_keys(Keys.ENTER)  
 
             time.sleep(5)
-
-        except Exception as ex:  # if smth went wrong, close the browser
+        # if smth went wrong, close the browser
+        except Exception as ex:  
             print(ex)
             self.close_browser()
 
