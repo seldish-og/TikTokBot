@@ -4,12 +4,12 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-from tik_tok_auth import username, password
+from tik_tok_auth import email, password
 
 
 class TikTokBot:
-    def __init__(self, username, password):
-        self.username = username
+    def __init__(self, email, password):
+        self.username = email
         self.password = password
         self.browser = webdriver.Chrome("chromedriver.exe")
 
@@ -35,7 +35,7 @@ class TikTokBot:
             # clear the field (just in case)
             user_input.clear()
             # write the username
-            user_input.send_keys(username)
+            user_input.send_keys(email)
 
             time.sleep(random.randrange(2, 4))
             # find the field username
@@ -51,5 +51,5 @@ class TikTokBot:
         self.close_browser()
 
 
-tik_tok_parser = TikTokBot(username, password)
-tik_tok_parser.add_discription()
+tik_tok_parser = TikTokBot(email, password)
+tik_tok_parser.login()
