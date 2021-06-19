@@ -1,5 +1,6 @@
 import random
 import time
+
 import requests
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
@@ -31,7 +32,7 @@ class Parser:
 
     def close_browser(self):
         self.browser.close()  # close
-        self.browser.quit() # (just in case)
+        self.browser.quit()  # (just in case)
 
     def xpath_exists(self, url):
 
@@ -46,45 +47,47 @@ class Parser:
     def login(self):
         try:
             # open website
-            self.browser.get('https://www.instagram.com/accounts/login/?next=%2F&source=mobile_nav')  
+            self.browser.get('https://www.instagram.com/accounts/login/?next=%2F&source=mobile_nav')
             time.sleep(random.randrange(2, 4))
-            # find the field username
-            user_input = self.browser.find_element_by_name('username') 
+            # find username input
+            user_input = self.browser.find_element_by_name('username')
             # clear the field (just in case)
             user_input.clear()
             # write the username
-            user_input.send_keys(username)  
+            user_input.send_keys(username)
 
             time.sleep(random.randrange(2, 4))
-            # find the field username
-            password_input = self.browser.find_element_by_name('password')  
+            # find password input
+            password_input = self.browser.find_element_by_name('password')
             password_input.clear()
             # write the password
-            password_input.send_keys(password)  
+            password_input.send_keys(password)
+            time.sleep(random.randrange(2, 4))
             # send the complete authorization form
-            password_input.send_keys(Keys.ENTER)  
-
+            password_input.send_keys(Keys.ENTER)
             time.sleep(5)
         # if smth went wrong, close the browser
-        except Exception as ex:  
+        except Exception as ex:
             print(ex)
             self.close_browser()
 
     # get hrefs from userpage
     def get_list_of_hrefs(self, username):  # username = account name we need
         try:
-            self.browser.get(f'https://www.instagram.com/{username}/')  # open userpage website
+            # open userpage website
+            self.browser.get(f'https://www.instagram.com/{username}/')
             time.sleep(5)
-            hrefs = self.browser.find_elements_by_tag_name('a')  # find all <a> on the page
+            # find all <a> on the page
+            hrefs = self.browser.find_elements_by_tag_name('a')
             list_of_hrefs = []
-
             for i in hrefs:
-                href = i.get_attribute('href')  # extract links from the tag's attribute
-                if '/p/' in href:  # sort links
+                # extract links from the tag's attribute
+                href = i.get_attribute('href')
+                if '/p/' in href:
                     list_of_hrefs.append(href)
             return list_of_hrefs
-
-        except Exception as ex:  # if smth went wrong, close the browser
+        # if smth went wrong, close the browser
+        except Exception as ex:
             print(ex)
 
     def download_videos(self, username):
@@ -107,7 +110,7 @@ class Parser:
                         for chunk in video.iter_content(chunk_size=1024 * 1024):
                             if chunk:
                                 video_file.write(chunk)
-                else:          
+                else:
                     video_src_urls.append(f"{post_url}, no link!")
                 print(f"{post_url} successfully saved!")
 
