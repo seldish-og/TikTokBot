@@ -14,7 +14,7 @@ class Parser:
         self.username = username
         self.password = password
         # instagram's video src doesn't work on PC normally. Video has 'blob:https://...' link format
-        # but using mobile emulator, link has normal format ('https://...')
+        # but using mobile emulator, link has normal form ('https://...')
         mobile_emulation = {
             "deviceName": "iPhone X"
         }  # choose device to emulate
@@ -31,11 +31,10 @@ class Parser:
             options=chrome_options)
 
     def close_browser(self):
-        self.browser.close()  # close
+        self.browser.close()  # close browser
         self.browser.quit()  # (just in case)
 
     def xpath_exists(self, url):
-
         browser = self.browser
         try:
             browser.find_element_by_xpath(url)
@@ -62,7 +61,8 @@ class Parser:
             password_input.clear()
             # write the password
             password_input.send_keys(password)
-            time.sleep(random.randrange(2, 4))
+            
+            time.sleep(random.randrange(2, 4)
             # send the complete authorization form
             password_input.send_keys(Keys.ENTER)
             time.sleep(5)
@@ -115,6 +115,7 @@ class Parser:
                 print(f"{post_url} successfully saved!")
 
                 self.close_browser()
+                
         except Exception as ex:
             print(ex)
             self.close_browser()
