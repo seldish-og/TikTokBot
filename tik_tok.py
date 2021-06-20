@@ -30,6 +30,8 @@ class TikTokBot:
         try:
             self.browser.get('https://www.tiktok.com')
             time.sleep(1)
+            # there must be captcha solution and a loop to solve it several times
+            # or login manually and use cookies next times
             # find and click log in button
             self.browser.find_element_by_class_name('login-button').click()
             time.sleep(20)
@@ -58,8 +60,6 @@ class TikTokBot:
 
         except Exception as ex:
             print(ex)
-
-    # /html/body/div[1]/div/div[1]/div/form/div/input
 
     def upload_new_post(self):
         # upload video
