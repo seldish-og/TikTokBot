@@ -28,7 +28,7 @@ class TikTokBot:
 
     def login(self):
         try:
-            self.browser.get('https://www.tiktok.com')
+            self.browser.get('https://www.tiktok.com') # '...tiktok.com/login' doesnt work, ask to download an app 
             time.sleep(1)
             # there must be captcha solution and a loop to solve it several times
             # or login manually and use cookies next times
