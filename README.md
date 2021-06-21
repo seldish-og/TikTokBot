@@ -1,4 +1,9 @@
 # TikTokBot
+
+
+--- If you want to join the project or support, contact me: georgeseldish@mail.ru---
+
+
 Bot saves videos from instagram and then posts them to Tik-Tok 
 
 plans:
