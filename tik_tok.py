@@ -4,6 +4,7 @@ import time
 import requests
 from selenium.webdriver.common.action_chains import ActionChains
 
+from captcha import CaptchaSolver
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
@@ -61,7 +62,8 @@ class TikTokBot:
                     # find and drive the slider by setting an offset value.
                     slider = self.browser.find_element_by_xpath('/html/body/div[2]/div/div[3]/div[2]/div[1]')
                     move = ActionChains(self.browser)
-                    move.click_and_hold(slider).move_by_offset(0, 0).release().perform()
+                    captcha_coordinates = CaptchaSolver.find_coordinates()
+                    move.click_and_hold(slider).move_by_offset(captcha_coordinates, 0).release().perform()
             except Exception as ex:
                 print(ex)
 
