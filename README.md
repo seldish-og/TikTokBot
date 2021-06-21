@@ -1,5 +1,6 @@
 # TikTokBot
 Bot saves videos from instagram and then posts them to Tik-Tok 
+
 plans:
 1) create an instagram parser                                 [done]
 2) create an tiktok video uploader bot                        [in process]
