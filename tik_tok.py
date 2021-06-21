@@ -2,6 +2,8 @@ import random
 import time
 
 import requests
+from selenium.webdriver.common.action_chains import ActionChains
+
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
@@ -47,7 +49,7 @@ class TikTokBot:
             # or login manually and use cookies next times
 
             # find captcha on the page
-            try:  # get captcha and captcha key to match them 
+            try:  # get captcha and captcha key to match them
                 captcha_xpath = "/html/body/div[6]/div"
                 if self.xpath_exists(captcha_xpath):
                     captcha_src_url = self.browser.find_element_by_xpath(
@@ -56,6 +58,10 @@ class TikTokBot:
                         '/html/body/div[6]/div/div[2]/img[2]').get_attribute("src")
                     captcha = requests.get(captcha_src_url, stream=True)
                     captcha_key = requests.get(captcha_key_src_url, stream=True)
+                    # find and drive the slider by setting an offset value.
+                    slider = self.browser.find_element_by_xpath('/html/body/div[2]/div/div[3]/div[2]/div[1]')
+                    move = ActionChains(self.browser)
+                    move.click_and_hold(slider).move_by_offset(0, 0).release().perform()
             except Exception as ex:
                 print(ex)
 
