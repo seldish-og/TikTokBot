@@ -10,6 +10,7 @@ plans:
 1) create an instagram parser                                 [done]
 2) create an tiktok video uploader bot                        [in process]
 3) find the way to pass captcha or create captchasolver       [almost done]
-5) connect relation database(save video there)                []
-6) make a webpage or grafical interface to see statistics     []
-7) ...
+5) make it deployable on heroku                               [] 
+6) connect relation database(save video there)                []
+7) make a webpage or grafical interface to see statistics     []
+8) ...
