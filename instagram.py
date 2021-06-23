@@ -62,7 +62,7 @@ class Parser:
             # write the password
             password_input.send_keys(password)
             
-            time.sleep(random.randrange(2, 4)
+            time.sleep(random.randrange(2, 4))
             # send the complete authorization form
             password_input.send_keys(Keys.ENTER)
             time.sleep(5)
