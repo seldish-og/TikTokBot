@@ -12,5 +12,5 @@ plans:
 3) find the way to pass captcha or create captchasolver       [almost done]
 5) make it deployable on heroku                               [] 
 6) connect relation database(save video there)                []
-7) make a webpage or grafical interface to see statistics     []
+7) make a webpage or grafic interface to see statistics     []
 8) ...
