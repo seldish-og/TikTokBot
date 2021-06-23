@@ -2,13 +2,12 @@ import random
 import time
 
 import requests
-from selenium.webdriver.common.action_chains import ActionChains
-
-from captcha import CaptchaSolver
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
+from captcha import CaptchaSolver
 from tik_tok_auth import email, password
 
 
@@ -22,6 +21,9 @@ class TikTokBot:
         self.browser.close()
         self.browser.quit()
 
+    # def open_browser(self):
+    #     self.browser.get('https://www.tiktok.com')
+
     def generate_discription(self):
         list_of_hashtags = ['#meme', '#tranding', '#trand', '#recommendations', '#tranding', '#trand',
                             '#recommendations', '#wow', '#batman', '#hightechnologies']
@@ -31,8 +33,7 @@ class TikTokBot:
         text_description = []
         # return
 
-    def xpath_exists(self, xpath):
-
+    def captcha_exists(self, xpath):
         browser = self.browser
         try:
             browser.find_element_by_xpath(xpath)
@@ -50,22 +51,26 @@ class TikTokBot:
             # or login manually and use cookies next times
 
             # find captcha on the page
-            try:  # get captcha and captcha key to match them
-                captcha_xpath = "/html/body/div[6]/div"
-                if self.xpath_exists(captcha_xpath):
-                    captcha_src_url = self.browser.find_element_by_xpath(
-                        '/html/body/div[6]/div/div[2]/img[1]').get_attribute("src")
-                    captcha_key_src_url = self.browser.find_element_by_xpath(
-                        '/html/body/div[6]/div/div[2]/img[2]').get_attribute("src")
-                    captcha = requests.get(captcha_src_url, stream=True)
-                    captcha_key = requests.get(captcha_key_src_url, stream=True)
-                    # find and drive the slider by setting an offset value.
-                    slider = self.browser.find_element_by_xpath('/html/body/div[2]/div/div[3]/div[2]/div[1]')
-                    move = ActionChains(self.browser)
-                    captcha_coordinates = CaptchaSolver.find_coordinates()
-                    move.click_and_hold(slider).move_by_offset(captcha_coordinates, 0).release().perform()
-            except Exception as ex:
-                print(ex)
+            while True:
+                try:  # get captcha and captcha key to match them
+                    captcha_xpath = "/html/body/div[2]/div"
+                    if self.captcha_exists(captcha_xpath):
+                        captcha_src = self.browser.find_element_by_id('captcha-verify-image').get_attribute("src")
+                        captcha_key_src = self.browser.find_element_by_class_name('captcha_verify_img_slide').get_attribute("src")
+                        captcha = requests.get(captcha_src, stream=True)
+                        captcha_key = requests.get(captcha_key_src, stream=True)
+                        # find and drive the slider by setting an offset value.
+                        slider = self.browser.find_element_by_xpath('/html/body/div[2]/div/div[3]/div[2]/div[1]')
+                        move = ActionChains(self.browser)
+                        captcha_coordinates = CaptchaSolver(captcha, captcha_key).find_coordinates()
+                        move.click_and_hold(slider).move_by_offset(captcha_coordinates, 0).release().perform()
+                        break
+                    else:
+                        self.browser.refresh()
+
+                except Exception as ex:
+                    print(ex)
+                    break
 
             # find and click log in button
             self.browser.find_element_by_class_name('login-button').click()
