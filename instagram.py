@@ -72,10 +72,10 @@ class Parser:
             self.close_browser()
 
     # get hrefs from userpage
-    def get_list_of_hrefs(self, username):  # username = account name we need
+    def get_list_of_hrefs(self, page_name):  # username = account name we need
         try:
             # open userpage website
-            self.browser.get(f'https://www.instagram.com/{username}/')
+            self.browser.get(f'https://www.instagram.com/{page_name}/')
             time.sleep(5)
             # find all <a> on the page
             hrefs = self.browser.find_elements_by_tag_name('a')
@@ -90,32 +90,28 @@ class Parser:
         except Exception as ex:
             print(ex)
 
-    def download_videos(self, username):
+    def download_videos(self, page_name, count):
         try:
-            hrefs = self.get_list_of_hrefs(username)
+            hrefs = self.get_list_of_hrefs(page_name)
             for post_url in hrefs:
                 self.browser.get(post_url)
                 time.sleep(4)
                 video_src = "/html/body/div[1]/section/main/div/div[1]/article/div[2]/div/div/div[1]/div/div/video"
                 post_id = post_url.split("/")[-2]
-                video_src_urls = []
 
                 if self.xpath_exists(video_src):
                     video_src_url = self.browser.find_element_by_xpath(video_src).get_attribute("src")
-                    video_src_urls.append(video_src_url)
 
                     # save video
                     video = requests.get(video_src_url, stream=True)
-                    with open(f"{post_id}_video.mp4", "wb") as video_file:
+                    with open(f"video{count}.mp4", "wb") as video_file:
                         for chunk in video.iter_content(chunk_size=1024 * 1024):
                             if chunk:
                                 video_file.write(chunk)
                 else:
-                    video_src_urls.append(f"{post_url}, no link!")
+                    print('error')
+                    break
                 print(f"{post_url} successfully saved!")
-
-                self.close_browser()
-                
         except Exception as ex:
             print(ex)
             self.close_browser()
@@ -123,4 +119,16 @@ class Parser:
 
 parser = Parser(username, password)
 parser.login()
-parser.download_videos('funnyvideos')
+pages = ['funnyvideos', '']
+# download 3 videos from every page. Wait 1 hour and repeat
+while True:
+    try:
+        count = 0
+        for i in pages:
+            for j in range(3):
+                count += 1
+                parser.download_videos(i, count)
+        time.sleep(3600)
+    except Exception as ex:
+        print(ex)
+        break
