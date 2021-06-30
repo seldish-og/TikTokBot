@@ -1,7 +1,6 @@
 import random
 import time
 
-import requests
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
@@ -21,10 +20,10 @@ class TikTokBot:
         self.browser.close()
         self.browser.quit()
 
-    # def open_browser(self):
-    #     self.browser.get('https://www.tiktok.com')
+    def open_browser(self):
+        self.browser.get('https://www.tiktok.com')
 
-    def generate_discription(self):
+    def generate_description(self):
         list_of_hashtags = ['#meme', '#tranding', '#trand', '#recommendations', '#tranding', '#trand',
                             '#recommendations', '#wow', '#batman', '#hightechnologies']
         random_quantity = random.randrange(2, 4)
@@ -33,10 +32,10 @@ class TikTokBot:
         text_description = []
         # return
 
-    def captcha_exists(self, xpath):
+    def captcha_exists(self, id):
         browser = self.browser
         try:
-            browser.find_element_by_xpath(xpath)
+            browser.find_element_by_id(id)
             exist = True
         except NoSuchElementException:
             exist = False
@@ -47,22 +46,18 @@ class TikTokBot:
             self.browser.get('https://www.tiktok.com')
             time.sleep(random.randrange(1, 3))
 
-            # there must be captcha solution and a loop to solve it several times
-            # or login manually and use cookies next times
-
             # find captcha on the page
             while True:
                 try:  # get captcha and captcha key to match them
-                    captcha_xpath = "/html/body/div[2]/div"
-                    if self.captcha_exists(captcha_xpath):
+                    captcha_id = "captcha-verify-image"
+                    if self.captcha_exists(captcha_id):
                         captcha_src = self.browser.find_element_by_id('captcha-verify-image').get_attribute("src")
-                        captcha_key_src = self.browser.find_element_by_class_name('captcha_verify_img_slide').get_attribute("src")
-                        captcha = requests.get(captcha_src, stream=True)
-                        captcha_key = requests.get(captcha_key_src, stream=True)
+                        captcha_key_src = self.browser.find_element_by_class_name(
+                            'captcha_verify_img_slide').get_attribute("src")
                         # find and drive the slider by setting an offset value.
                         slider = self.browser.find_element_by_xpath('/html/body/div[2]/div/div[3]/div[2]/div[1]')
                         move = ActionChains(self.browser)
-                        captcha_coordinates = CaptchaSolver(captcha, captcha_key).find_coordinates()
+                        captcha_coordinates = CaptchaSolver(captcha_src, captcha_key_src).find_coordinates()
                         move.click_and_hold(slider).move_by_offset(captcha_coordinates, 0).release().perform()
                         break
                     else:
@@ -114,7 +109,7 @@ class TikTokBot:
         # add caption
         capton_input = self.browser.find_element_by_xpath(
             '/html/body/div[1]/div/div[2]/div/div[2]/div[3]/div[1]/div[1]/div[2]/div/div[1]/div/div/div/div/div/div')
-        capton_input.send_keys(self.generate_discription())
+        capton_input.send_keys(self.generate_description())
 
         capton_input.send_keys(Keys.ENTER)
 
