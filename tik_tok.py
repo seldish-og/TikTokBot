@@ -67,9 +67,11 @@ class TikTokBot:
                         captcha_coordinates = CaptchaSolver(captcha_src, captcha_key_src).find_coordinates()
                         # drive the slider
                         move.click_and_hold(slider).move_by_offset(captcha_coordinates, 0).release().perform()
-                        break
+                        if not self.captcha_exists(captcha_id):
+                            break
                     else:
                         self.browser.refresh()
+                        time.sleep(10)
 
                 except Exception as ex:
                     print(ex)
