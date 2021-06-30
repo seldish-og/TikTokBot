@@ -48,16 +48,24 @@ class TikTokBot:
 
             # find captcha on the page
             while True:
-                try:  # get captcha and captcha key to match them
+                try:
                     captcha_id = "captcha-verify-image"
                     if self.captcha_exists(captcha_id):
+
+                        # get captcha and captcha key
                         captcha_src = self.browser.find_element_by_id('captcha-verify-image').get_attribute("src")
+                        # on the main page src ends at .image, to work with a pic I refactor link to .jpeg (it works)
+                        captcha_src = f'{captcha_src[:-5]}jpg'
                         captcha_key_src = self.browser.find_element_by_class_name(
                             'captcha_verify_img_slide').get_attribute("src")
-                        # find and drive the slider by setting an offset value.
+                        captcha_key_src = f'{captcha_key_src[:-5]}jpg'
+
+                        # find the slider
                         slider = self.browser.find_element_by_xpath('/html/body/div[2]/div/div[3]/div[2]/div[1]')
                         move = ActionChains(self.browser)
+                        # get an offset value
                         captcha_coordinates = CaptchaSolver(captcha_src, captcha_key_src).find_coordinates()
+                        # drive the slider
                         move.click_and_hold(slider).move_by_offset(captcha_coordinates, 0).release().perform()
                         break
                     else:
@@ -107,11 +115,11 @@ class TikTokBot:
         video_input.send_keys()
 
         # add caption
-        capton_input = self.browser.find_element_by_xpath(
+        caption_input = self.browser.find_element_by_xpath(
             '/html/body/div[1]/div/div[2]/div/div[2]/div[3]/div[1]/div[1]/div[2]/div/div[1]/div/div/div/div/div/div')
-        capton_input.send_keys(self.generate_description())
+        caption_input.send_keys(self.generate_description())
 
-        capton_input.send_keys(Keys.ENTER)
+        caption_input.send_keys(Keys.ENTER)
 
 
 tik_tok_parser = TikTokBot(email, password)
