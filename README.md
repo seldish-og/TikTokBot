@@ -11,6 +11,5 @@ plans:
 2) create a tiktok video uploader bot                         [done]
 3) find the way to pass captcha or create captchasolver       [done]
 5) make it deployable on heroku                               [done] 
-6) connect relation database(save video there)                []
-7) make a webpage or grafic interface to see statistics       []
-8) ...
+6) make a webpage or grafic interface to see statistics       []
+7) ...
