@@ -1,3 +1,3 @@
 requests==2.22.0
-selenium=3.141.0
-opencv-python=4.5.2.54
+selenium==3.141.0
+opencv-python==4.5.2.54

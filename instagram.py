@@ -1,6 +1,6 @@
 import random
 import time
-
+import os
 import requests
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
@@ -27,7 +27,7 @@ class Parser:
 
         # create driver, pass it the path to the chromedriver file and the special configurations you want to run
         self.browser = webdriver.Chrome(
-            executable_path='chromedriver.exe',
+            executable_path='/home/mark/Desktop/TikTok-Project/TikTokBot/chromedriver',
             options=chrome_options)
 
     def close_browser(self):
@@ -61,20 +61,20 @@ class Parser:
             password_input.clear()
             # write the password
             password_input.send_keys(password)
-            
+
             time.sleep(random.randrange(2, 4))
             # send the complete authorization form
             password_input.send_keys(Keys.ENTER)
             time.sleep(5)
-        # if smth went wrong, close the browser
-        except Exception as ex:
-            print(ex)
+        # if something went wrong, close the browser
+        except Exception as e:
+            print(e)
             self.close_browser()
 
-    # get hrefs from userpage
-    def get_list_of_hrefs(self, page_name):  # username = account name we need
+    # get hrefs from user page
+    def get_list_of_hrefs(self, page_name):  # page_name = account name we need
         try:
-            # open userpage website
+            # open user page website
             self.browser.get(f'https://www.instagram.com/{page_name}/')
             time.sleep(5)
             # find all <a> on the page
@@ -83,51 +83,59 @@ class Parser:
             for i in hrefs:
                 # extract links from the tag's attribute
                 href = i.get_attribute('href')
+                # all videos have /p/ in their href
                 if '/p/' in href:
                     list_of_hrefs.append(href)
             return list_of_hrefs
-        # if smth went wrong, close the browser
-        except Exception as ex:
-            print(ex)
+        # if something went wrong, close the browser
+        except Exception as exc:
+            print(exc)
+            print("something wrong with links")
+            self.close_browser()
 
-    def download_videos(self, page_name, count):
+    def download_videos(self, page_name, video_number, hrefs):
         try:
-            hrefs = self.get_list_of_hrefs(page_name)
+            # hrefs = self.get_list_of_hrefs(page_name)
             for post_url in hrefs:
+                video_number += 1
                 self.browser.get(post_url)
                 time.sleep(4)
                 video_src = "/html/body/div[1]/section/main/div/div[1]/article/div[2]/div/div/div[1]/div/div/video"
-                post_id = post_url.split("/")[-2]
 
                 if self.xpath_exists(video_src):
-                    video_src_url = self.browser.find_element_by_xpath(video_src).get_attribute("src")
-
-                    # save video
-                    video = requests.get(video_src_url, stream=True)
-                    with open(f"video{count}.mp4", "wb") as video_file:
-                        for chunk in video.iter_content(chunk_size=1024 * 1024):
-                            if chunk:
-                                video_file.write(chunk)
+                    if video_number != 4:
+                        video_src_url = self.browser.find_element_by_xpath(video_src).get_attribute("src")
+                        # save video
+                        video = requests.get(video_src_url, stream=True)
+                        save_folder = "videos"
+                        video_name = f"video_{page_name}_{video_number}.mp4"
+                        complete_name = os.path.join(save_folder, video_name)
+                        with open(complete_name, "wb") as video_file:
+                            for chunk in video.iter_content(chunk_size=1024 * 1024):
+                                if chunk:
+                                    video_file.write(chunk)
+                    else:
+                        print("---4 videos were successfully downloaded---")
+                        break
                 else:
-                    print('error')
+                    print('error with video xpath')
                     break
                 print(f"{post_url} successfully saved!")
-        except Exception as ex:
-            print(ex)
+        except Exception as exception:
+            print(exception)
+            print('error with downloading videos ')
             self.close_browser()
 
 
 parser = Parser(username, password)
 parser.login()
-pages = ['funnyvideos', '']
-# download 3 videos from every page. Wait 1 hour and repeat
+pages = ['funnyvideos']
+hrefs = parser.get_list_of_hrefs(pages[0])  # download 3 videos from every page. Wait 1 hour and repeat
 while True:
     try:
-        count = 0
         for i in pages:
-            for j in range(3):
-                count += 1
-                parser.download_videos(i, count)
+            parser.download_videos(i, 0, hrefs)
+        print("time break 1 hour")
         time.sleep(3600)
     except Exception as ex:
         print(ex)
