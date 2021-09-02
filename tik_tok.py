@@ -1,6 +1,6 @@
 import random
 import time
-
+import json
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
@@ -8,7 +8,7 @@ from selenium.webdriver.common.keys import Keys
 
 from captcha import CaptchaSolver
 from tik_tok_auth import email, password
-
+from instagram import InstagramParser
 
 class TikTokBot:
     def __init__(self, email, password):
@@ -95,13 +95,10 @@ class TikTokBot:
             user_input.send_keys(email)
             time.sleep(random.randrange(2, 4))
 
-            # find the field username
             password_input = self.browser.find_element_by_name('password')
             password_input.clear()
-            # write the password
             password_input.send_keys(password)
             time.sleep(random.randrange(1, 4))
-            # send the complete authorization form
             password_input.send_keys(Keys.ENTER)
             # time.sleep(100)
 
@@ -125,4 +122,7 @@ class TikTokBot:
 
 
 tik_tok_parser = TikTokBot(email, password)
+
+inst_parser = InstagramParser()
+inst_parser.inst_main()
 tik_tok_parser.login()
