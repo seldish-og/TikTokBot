@@ -6,7 +6,6 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 import json
-from inst_auth import username, password
 
 
 class InstagramParser:
@@ -48,7 +47,7 @@ class InstagramParser:
             exist = False
         return exist
 
-    def login(self): # login to the account
+    def login(self):  # login to the account
         try:
             self.browser.get('https://www.instagram.com/accounts/login/?next=%2F&source=mobile_nav')
             time.sleep(random.randrange(2, 4))
@@ -56,13 +55,13 @@ class InstagramParser:
             user_input = self.browser.find_element_by_name('username')
             # clear the field (just in case)
             user_input.clear()
-            user_input.send_keys(username)
+            user_input.send_keys(self.username)
 
             time.sleep(random.randrange(2, 4))
 
             password_input = self.browser.find_element_by_name('password')
             password_input.clear()
-            password_input.send_keys(password)
+            password_input.send_keys(self.password)
 
             time.sleep(random.randrange(2, 4))
             # send the complete authorization form
@@ -126,7 +125,7 @@ class InstagramParser:
     def inst_main(self):
         self.login()
         pages = self.json_form["instagram_channels"]
-          # download 3 videos from every page. Wait 1 hour and repeat
+        # download 3 videos from every page. Wait 1 hour and repeat
         video_count = 0
         quantity = int(self.json_form["videos_quantity"])
         try:
@@ -138,8 +137,3 @@ class InstagramParser:
             time.sleep(3600)
         except Exception as ex:
             print(ex)
-
-
-
-
-
