@@ -124,15 +124,14 @@ class InstagramParser:
 
     def inst_main(self):
         self.login()
-        pages = self.json_form["instagram_channels"]
-        # download 3 videos from every page. Wait 1 hour and repeat
-        video_count = 0
-        quantity = int(self.json_form["videos_quantity"])
+        pages_and_quantities = self.json_form["links_and_quantity"]
+        video_number = 0
         try:
-            for page in pages:
-                hrefs = self.get_list_of_hrefs(page)
-                self.download_videos(page, video_count, hrefs, quantity)
-                video_count += quantity
+            for page in pages_and_quantities:
+                hrefs = self.get_list_of_hrefs(page.split()[0])
+                quantity = int(page.split()[1])
+                self.download_videos(page, video_number, hrefs, quantity)
+                video_number += quantity
             print("time break 1 hour")
             time.sleep(3600)
         except Exception as ex:
