@@ -23,25 +23,25 @@ class TikTokBot:
             self.json_tik_tok_form = json.load(file_forms)
         self.username = json_config["TIK-TOK_LOGIN"]
         self.password = json_config["TIK-TOK_PASSWORD"]
-        mobile_emulation = {
-            "deviceName": "iPhone X"
-        }
-        chrome_options = webdriver.ChromeOptions()
-        # add the mobile emulation to the chrome options variable
-        chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
+#         mobile_emulation = {
+#             "deviceName": "iPhone X"
+#         }
+#         chrome_options = webdriver.ChromeOptions()
+#         # add the mobile emulation to the chrome options variable
+#         chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
 
-        self.browser = webdriver.Chrome(
-            executable_path='chromedriver.exe',
-            options=chrome_options)
-        # options = webdriver.ChromeOptions()
-        # options.add_argument("window-size=1400,1400")
-        # ua = UserAgent()
-        # user_agent = ua.random
-        # print(user_agent)
-        # options.add_argument(f'user-agent={user_agent}')
-        # options.add_experimental_option("useAutomationExtension", False)
-        # options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        # self.browser = webdriver.Chrome(executable_path="chromedriver.exe", options=options)
+#         self.browser = webdriver.Chrome(
+#             executable_path='chromedriver.exe',
+#             options=chrome_options)
+        options = webdriver.ChromeOptions()
+        options.add_argument("window-size=1400,1400")
+        ua = UserAgent()
+        user_agent = ua.random
+        print(user_agent)
+        options.add_argument(f'user-agent={user_agent}')
+        options.add_experimental_option("useAutomationExtension", False)
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        self.browser = webdriver.Chrome(executable_path="chromedriver.exe", options=options)
 
     def close_browser(self):
         self.browser.close()
