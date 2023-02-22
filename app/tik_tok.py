@@ -9,8 +9,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
-from captcha import CaptchaSolver
-from instagram import InstagramParser
+from app.captcha import CaptchaSolver
+from app.instagram import InstagramParser
 from fake_useragent import UserAgent
 
 
@@ -40,8 +40,10 @@ class TikTokBot:
         print(user_agent)
         options.add_argument(f'user-agent={user_agent}')
         options.add_experimental_option("useAutomationExtension", False)
-        options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        self.browser = webdriver.Chrome(executable_path="chromedriver.exe", options=options)
+        options.add_experimental_option(
+            "excludeSwitches", ["enable-automation"])
+        self.browser = webdriver.Chrome(
+            executable_path="chromedriver.exe", options=options)
 
     def close_browser(self):
         self.browser.close()
@@ -64,8 +66,10 @@ class TikTokBot:
     def solve_captcha(self):
         while True:
             try:
-                if self.captcha_exists("captcha-verify-image"):  # send captcha id to method
-                    captcha_image_src = self.browser.find_element_by_id('captcha-verify-image').get_attribute("src")
+                # send captcha id to method
+                if self.captcha_exists("captcha-verify-image"):
+                    captcha_image_src = self.browser.find_element_by_id(
+                        'captcha-verify-image').get_attribute("src")
 
                     '''on the main page src ends at .image, to work with a pic I refactor link to .jpeg(it works)'''
                     captcha_image_src = f'{captcha_image_src[:-6]}.jpg'
@@ -73,15 +77,20 @@ class TikTokBot:
                         'captcha_verify_img_slide').get_attribute("src")
                     captcha_key_src = f'{captcha_key_src[:-6]}.jpg'
 
-                    slider = self.browser.find_element_by_xpath('/html/body/div[2]/div/div[3]/div[2]/div[1]')
+                    slider = self.browser.find_element_by_xpath(
+                        '/html/body/div[2]/div/div[3]/div[2]/div[1]')
                     move = ActionChains(self.browser)
                     # get an offset value
-                    captcha_key_coordinates = CaptchaSolver(captcha_image_src, captcha_key_src).find_coordinates()
+                    captcha_key_coordinates = CaptchaSolver(
+                        captcha_image_src, captcha_key_src).find_coordinates()
                     # drive the slider
                     # move.drag_and_drop_by_offset(slider, captcha_key_coordinates, 0).perform()
-                    move.click_and_hold(slider).move_by_offset(captcha_key_coordinates / 3, 0)
-                    move.click_and_hold(slider).move_by_offset(captcha_key_coordinates / 3, 0)
-                    move.click_and_hold(slider).move_by_offset(captcha_key_coordinates / 3, 0).release().perform()
+                    move.click_and_hold(slider).move_by_offset(
+                        captcha_key_coordinates / 3, 0)
+                    move.click_and_hold(slider).move_by_offset(
+                        captcha_key_coordinates / 3, 0)
+                    move.click_and_hold(slider).move_by_offset(
+                        captcha_key_coordinates / 3, 0).release().perform()
                     time.sleep(random.randrange(3, 5))
                     if not self.captcha_exists("captcha-verify-image"):
                         break
@@ -107,14 +116,17 @@ class TikTokBot:
             time.sleep(10)
 
             # switch to iframe
-            iframe = self.browser.find_element_by_xpath('/html/body/div[3]/div[1]/iframe')
+            iframe = self.browser.find_element_by_xpath(
+                '/html/body/div[3]/div[1]/iframe')
             self.browser.switch_to.frame(iframe)
 
             # open auth by email
             time.sleep(random.randrange(3, 6))
-            self.browser.find_element_by_xpath('/html/body/div[1]/div/div[1]/div/div[1]/div[2]/div[2]/div[2]').click()
+            self.browser.find_element_by_xpath(
+                '/html/body/div[1]/div/div[1]/div/div[1]/div[2]/div[2]/div[2]').click()
             time.sleep(random.randrange(3, 7))
-            self.browser.find_element_by_xpath('/html/body/div[1]/div/div[1]/form/div[1]/a').click()
+            self.browser.find_element_by_xpath(
+                '/html/body/div[1]/div/div[1]/form/div[1]/a').click()
             time.sleep(random.randrange(3, 8))
             user_input = self.browser.find_element_by_name('email')
             user_input.clear()
@@ -135,7 +147,8 @@ class TikTokBot:
         self.browser.get('https://www.tiktok.com/upload')
         time.sleep(random.randrange(1, 3))
 
-        video_input_field = self.browser.find_element_by_name('upload-btn')  # <input type="file" name="upload-btn"...>
+        video_input_field = self.browser.find_element_by_name(
+            'upload-btn')  # <input type="file" name="upload-btn"...>
         video_input_field.send_keys(video)
 
         # add caption
@@ -165,7 +178,8 @@ try:
     videos = glob.glob(f"{folder_path}/*.mp4")  # return list with videos paths
     for video in videos:
         tik_tok_parser.upload_new_post(video)
-        time.sleep(tik_tok_parser.json_tik_tok_form["time delay, before uploading videos"])
+        time.sleep(
+            tik_tok_parser.json_tik_tok_form["time delay, before uploading videos"])
 except IndexError:
     print("folder with videos is empty")
     # inst_parser.inst_main()
