@@ -10,7 +10,6 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from app.captcha import CaptchaSolver
-from app.instagram import InstagramParser
 from fake_useragent import UserAgent
 
 
@@ -138,7 +137,6 @@ class TikTokBot:
             password_input.send_keys(self.password)
             time.sleep(random.randrange(1, 4))
             password_input.send_keys(Keys.ENTER)
-            # time.sleep(100)
         except Exception as ex:
             print(ex)
             print("smth with login")
@@ -167,9 +165,6 @@ def delete_video(video_path, video_index):
         print("folder with videos is empty")
 
 
-# inst_parser = InstagramParser()
-# inst_parser.inst_main()
-
 tik_tok_parser = TikTokBot()
 tik_tok_parser.login()
 time.sleep(10)
@@ -182,4 +177,3 @@ try:
             tik_tok_parser.json_tik_tok_form["time delay, before uploading videos"])
 except IndexError:
     print("folder with videos is empty")
-    # inst_parser.inst_main()

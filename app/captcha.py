@@ -1,9 +1,5 @@
-import urllib
-from urllib.request import urlopen
 import requests
 import cv2
-import numpy as np
-from PIL import Image as im
 
 
 class CaptchaSolver:
@@ -29,8 +25,8 @@ class CaptchaSolver:
         captcha = cv2.imread('test1.png', 0)
         key = cv2.imread('test2.png', 0)
 
-        # choose method
-        method = eval('cv2.TM_CCOEFF_NORMED')  # 'cv.TM_CCOEFF_NORMED', 'cv.TM_CCORR_NORMED', 'cv.TM_SQDIFF_NORMED'
+        # other methods: 'cv.TM_CCOEFF_NORMED', 'cv.TM_CCORR_NORMED', 'cv.TM_SQDIFF_NORMED'
+        method = eval('cv2.TM_CCOEFF_NORMED')
 
         # apply template matching
         match = cv2.matchTemplate(captcha, key, method)

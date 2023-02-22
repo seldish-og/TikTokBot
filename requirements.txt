@@ -1,0 +1,4 @@
+requests
+selenium
+opencv-python
+fake_useragent
